@@ -1,0 +1,17 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+
+<h2>Choose your division for {{=location}} field</h2>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Division</th>
+    </tr>
+    <tbody>
+    {{ for division in divisions.render(): }}
+        <tr>
+            <td>{{=A(division['divisions']['name'], _href=URL('matches', 'divisions', args=(division['divisions']['id'])))}}</td>
+        </tr>
+    {{pass}}
+</tbody>
+</table>

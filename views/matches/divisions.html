@@ -1,0 +1,60 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+
+<h2>Standing</h2>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Position</th>
+        <th>Team</th>
+        <th>PG</th>
+        <th>WG</th>
+        <th>TG</th>
+        <th>LG</th>
+        <th>Goals</th>
+        <th>Goal difference</th>
+        <th>Points</th>
+    </tr>
+    <tbody>
+    {{ for standing in standings.render(): }}
+        <tr>
+            <td>{{=standing['pos']}}</td>
+            <td>{{=standing['team_id']}}</td>
+            <td>{{=standing['played_games']}}</td>
+            <td>{{=standing['won_games']}}</td>
+            <td>{{=standing['tie_games']}}</td>
+            <td>{{=standing['lost_games']}}</td>
+            <td>{{=standing['goals']}}</td>
+            <td>{{=standing['diff']}}</td>
+            <td>{{=standing['points']}}</td>
+        </tr>
+    {{pass}}
+</tbody>
+</table>
+
+<h2>Calendar</h2>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Match</th>
+        <th>Date</th>
+        <th>Score</th>
+        <th>Referee</th>
+        <th>MOTM</th>
+    </tr>
+    <tbody>
+    {{ for match in matches.render(): }}
+        <tr>
+            <td>{{=match['title']}}</td>
+            <td>{{=match['datetime']}}</td>
+            <td>{{=match['score']}}</td>
+            <td>{{=match['referee_id']}}</td>
+             {{if not match['motm']:}}
+            <td>{{=match['motm_fallback']}}</td>
+            {{else:}}
+            <td>{{=match['motm']}}</td>
+            {{pass}}
+        </tr>
+    {{pass}}
+</tbody>
+</table>

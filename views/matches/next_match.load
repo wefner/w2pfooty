@@ -1,0 +1,32 @@
+
+<div class="panel panel-info">
+  <div class="panel-heading"><h3 class="panel-title">
+      <i class="glyphicon glyphicon-cog"></i>
+      {{=T("Next Match")}}
+    </h3></div>
+  <ul class="list-group">
+    <li class="list-group-item">
+    {{if not match:}}
+        No match
+    {{else:}}
+        {{=match['title']}}<br>
+        {{=match['datetime']}}
+    {{pass}}
+    </li>
+  </ul>
+  <div class="panel-heading"><h3 class="panel-title">
+      <i class="glyphicon glyphicon-cog"></i>
+      {{=T("Lineup")}}
+    </h3></div>
+    <ul class="list-group">
+    <li class="list-group-item">
+    {{if not attendance:}}
+        No players yet
+    {{else:}}
+     {{ for att in attendance.render(): }}
+        {{=att['player_id']}} - {{=att['joining_option']}}<br>
+      {{pass}}
+    {{pass}}
+    </li>
+  </ul>
+</div>

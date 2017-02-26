@@ -1,0 +1,30 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Match</th>
+        <th>Date</th>
+        <th>Score</th>
+        <th>Referee</th>
+        <th>MOTM</th>
+        <th>Division</th>
+    </tr>
+    <tbody>
+    {{ for match in matches.render(): }}
+        <tr>
+            <td>{{=match['title']}}</td>
+            <td>{{=match['datetime']}}</td>
+            <td>{{=match['score']}}</td>
+            <td>{{=match['referee_id']}}</td>
+            {{if not match['motm']:}}
+            <td>{{=match['motm_fallback']}}</td>
+            {{else:}}
+            <td>{{=match['motm']}}</td>
+            {{pass}}
+            <td>{{=match['division_id']}}</td>
+        </tr>
+    {{pass}}
+</tbody>
+</table>

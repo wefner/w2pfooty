@@ -7,13 +7,9 @@ SCHEDULER = Scheduler(db)
 
 
 def update_db_from_footy():
+    create_att_options()
     footy = Footy()
     competitions = footy.competitions
-
-    options = ['Yes', 'No', 'Maybe']
-    for option in options:
-        db.att_options.update_or_insert(joining=option)
-
     for competition in competitions:
         location = db.locations.update_or_insert(name=competition.location)
         if not location:
@@ -79,7 +75,6 @@ def update_db_from_footy():
 def update_standings():
     footy = Footy()
     competitions = footy.competitions
-
     for competition in competitions:
         for team in competition.teams:
             division_id = db(
@@ -117,12 +112,26 @@ def get_motm(name):
     return motm
 
 
+def create_att_options():
+    options = ['Yes', 'No', 'Maybe']
+    for option in options:
+        db.att_options.update_or_insert(joining=option)
+
+
 def normalize_goals(goals):
     return goals if goals != '-' else None
 
 
 if not db((db.scheduler_task.task_name == 'update_db_from_footy')).select():
     SCHEDULER.queue_task(update_db_from_footy,
+                         timeout=600,
+                         period=3600,
+                         repeats=0,
+                         retry_failed=3)
+
+
+if not db((db.scheduler_task.task_name == 'update_standings')).select():
+    SCHEDULER.queue_task(update_standings,
                          timeout=600,
                          period=3600,
                          repeats=0,

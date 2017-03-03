@@ -18,6 +18,7 @@ settings.logging_config = dict(main=os.path.join(request.folder,
                                scheduler=os.path.join(request.folder,
                                                       'logging-scheduler.json'))
 
+
 # INITIALIZE LOGGING
 if os.path.exists(settings.logging_config['main']):
     try:
@@ -29,3 +30,19 @@ if os.path.exists(settings.logging_config['main']):
 logger = logging.getLogger(settings.app_name)
 
 
+# ----------------------
+# DATABASE CONFIGURATION
+# ----------------------
+# check if the POSTGRES_ENABLED env var is set. In that case it builds
+# the uri based on the postgres env vars
+settings.db_migrate = True
+settings.db_fake_migrate_all = False
+if os.environ.get('POSTGRES_ENABLED', True):
+    settings.db_uri = 'postgres://{u}:{p}@{h}:{po}/{db}'.format(
+        u=app_config.get('postgres.username'),
+        p=app_config.get('postgres.password'),
+        h=app_config.get('postgres.hostname'),
+        po=app_config.get('postgres.port'),
+        db=app_config.get('postgres.database'))
+else:
+    settings.db_uri = app_config.get('db.uri')

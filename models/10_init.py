@@ -24,7 +24,7 @@ db.define_table('standings',
                 Field('won_games', 'integer'),
                 Field('lost_games', 'integer'),
                 Field('tie_games', 'integer'),
-                Field('calendar', 'string', length=1024),
+                Field('calendar', 'text'),
                 Field('pos', 'integer'),
                 Field('team_id', 'reference teams'),
                 Field('division_id', 'reference divisions'))
@@ -76,6 +76,5 @@ mail.settings.ssl = myconf.get('smtp.ssl') or False
 auth.settings.registration_requires_verification = True
 auth.settings.registration_requires_approval = True
 auth.settings.reset_password_requires_verification = True
-auth.settings.login_after_registration = True
 auth.settings.password_min_length = 6
 

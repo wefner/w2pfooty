@@ -73,8 +73,8 @@ db.define_table('attendance',
 
 
 
-db.executesql('CREATE UNIQUE INDEX IF NOT EXISTS i_teams ON teams (name);')
-db.executesql('CREATE UNIQUE INDEX IF NOT EXISTS i_divisions ON divisions (name);')
-db.executesql('CREATE UNIQUE INDEX IF NOT EXISTS i_locations ON locations (name);')
-db.executesql('CREATE INDEX IF NOT EXISTS i_matches ON matches (title, home_team, visiting_team);')
+# db.executesql('CREATE UNIQUE INDEX IF NOT EXISTS i_teams ON teams (name);')
+# db.executesql('CREATE UNIQUE INDEX IF NOT EXISTS i_divisions ON divisions (name);')
+# db.executesql('CREATE UNIQUE INDEX IF NOT EXISTS i_locations ON locations (name);')
+# db.executesql('CREATE INDEX IF NOT EXISTS i_matches ON matches (title, home_team, visiting_team);')
 

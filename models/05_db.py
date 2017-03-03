@@ -34,9 +34,10 @@ if not request.env.web2py_runtime_gae:
     # ---------------------------------------------------------------------
     # if NOT running on Google App Engine use SQLite or other DB
     # ---------------------------------------------------------------------
-    db = DAL(myconf.get('db.uri'),
+    db = DAL(settings.db_uri,
              pool_size=myconf.get('db.pool_size'),
              migrate_enabled=myconf.get('db.migrate'),
+             fake_migrate_all=myconf.get('db.fake_migrate_all'),
              check_reserved=['all'],
              lazy_tables=False)
 else:

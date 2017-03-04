@@ -30,14 +30,10 @@ if os.path.exists(settings.logging_config['main']):
 logger = logging.getLogger(settings.app_name)
 
 
-# ----------------------
 # DATABASE CONFIGURATION
-# ----------------------
-# check if the POSTGRES_ENABLED env var is set. In that case it builds
-# the uri based on the postgres env vars
-settings.db_migrate = True
-settings.db_fake_migrate_all = False
-if os.environ.get('POSTGRES_ENABLED', True):
+# Check whether POSTGRES_ENABLED env var is set to True or not.
+# If so, generate connection string.
+if os.environ['POSTGRES_ENABLED'] == 'True':
     settings.db_uri = 'postgres://{u}:{p}@{h}:{po}/{db}'.format(
         u=app_config.get('postgres.username'),
         p=app_config.get('postgres.password'),

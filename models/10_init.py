@@ -6,7 +6,6 @@
 # is the ID of the team as a drop-down menu.
 
 
-
 db.define_table('divisions',
                 Field('name', 'string'),
                 format='%(name)s')

@@ -34,6 +34,8 @@ logger = logging.getLogger(settings.app_name)
 # Check whether POSTGRES_ENABLED env var is set to True or not.
 # If so, generate connection string.
 if app_config.has_key('postgres'):
+    db_log = "{}/databases/sql.log".format(request.folder)
+    open(db_log, 'w')
     settings.db_uri = 'postgres://{u}:{p}@{h}:{po}/{db}'.format(
         u=app_config.get('postgres.username'),
         p=app_config.get('postgres.password'),

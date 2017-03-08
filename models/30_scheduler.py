@@ -1,4 +1,6 @@
-
+import json
+import logging
+import logging.config
 from footylib import Footy
 from gluon.scheduler import Scheduler
 
@@ -6,7 +8,17 @@ from gluon.scheduler import Scheduler
 SCHEDULER = Scheduler(db)
 
 
-def update_db_from_footy():
+def update_db_from_footy(config):
+    try:
+        logging_config = json.loads(open(config['logging_config']).read())
+        logging.config.dictConfig(logging_config)
+        logger = logging.getLogger('update_db_from_footy')
+    except Exception as e:
+        raise Exception('Exception while initializing logging. '
+                        'Exception type: {t}. Error is: '
+                        '{e}'.format(t=str(type(e)), e=str(e)))
+    logger.info('Updating Competitions, Teams and Matches ')
+
     create_att_options()
     footy = Footy()
     competitions = footy.competitions
@@ -72,22 +84,35 @@ def update_db_from_footy():
     db.commit()
 
 
-def update_standings():
+def update_standings(config):
+    try:
+        logging_config = json.loads(open(config['logging_config']).read())
+        logging.config.dictConfig(logging_config)
+        logger = logging.getLogger('update_standings')
+    except Exception as e:
+        raise Exception('Exception while initializing logging. '
+                        'Exception type: {t}. Error is: '
+                        '{e}'.format(t=str(type(e)), e=str(e)))
+    logger.info('Updating Standings')
+
     footy = Footy()
     competitions = footy.competitions
     for competition in competitions:
         for team in competition.teams:
-            division_id = db(
-                db.divisions.name == team.division).select().first().id
+            try:
+                division_id = db(
+                    db.divisions.name == team.division).select().first().id
+            except AttributeError:
+                msg = "No division for team {}".format(team.name)
+                logger.exception(msg)
             team_id = db(
-                (db.teams.name == team.name)).select().first().id
+                db.teams.name == team.name).select().first().id
 
             where_standing = db.standings.update_or_insert(team_id=team_id, division_id=division_id)
             if not where_standing:
                 where_standing = db(
                     (db.standings.division_id == division_id) &
                     (db.standings.team_id == team_id)).select().first().id
-
             db.standings.update_or_insert(where_standing,
                                           pos=team.position,
                                           played_games=team.played_games,
@@ -124,6 +149,10 @@ def normalize_goals(goals):
 
 if not db((db.scheduler_task.task_name == 'update_db_from_footy')).select():
     SCHEDULER.queue_task(update_db_from_footy,
+                         pvars={
+                            'config': {
+                                'logging_config':
+                                    settings.logging_config['scheduler']}},
                          timeout=600,
                          period=3600,
                          repeats=0,
@@ -132,6 +161,10 @@ if not db((db.scheduler_task.task_name == 'update_db_from_footy')).select():
 
 if not db((db.scheduler_task.task_name == 'update_standings')).select():
     SCHEDULER.queue_task(update_standings,
+                         pvars={
+                             'config': {
+                                 'logging_config':
+                                     settings.logging_config['scheduler']}},
                          timeout=600,
                          period=3600,
                          repeats=0,

@@ -4,5 +4,6 @@ sessions
 errors
 uploads
 cache
+private/*.ini
 *.pyc
 

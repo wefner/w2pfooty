@@ -18,13 +18,12 @@ def next_match():
 
 def divisions():
     where = ((db.matches.division_id == request.args(0)))
-             # (db.standings.team_id == db.teams.id) &
-             # (db.standings.division_id == db.divisions.id))
     matches = db(where).select(db.matches.ALL,
                                distinct=True,
                                orderby=db.matches.division_id|db.matches.datetime)
     where_standing = (db.standings.division_id == request.args(0))
-    standings = db(where_standing).select(db.standings.ALL)
+    standings = db(where_standing).select(db.standings.ALL,
+                                          orderby=db.standings.pos)
     return dict(matches=matches, standings=standings)
 
 
